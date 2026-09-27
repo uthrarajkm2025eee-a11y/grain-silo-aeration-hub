@@ -1,0 +1,733 @@
+{
+	"info": {
+		"_postman_id": "8f3b2c1d-9e4a-4d2b-8a1c-9e7f6a5b4c3d",
+		"name": "Silo Aeration & Quality Optimization Hub API",
+		"description": "Comprehensive Postman collection for the Autonomous Agricultural Grain Silo Aeration & Quality Optimization Hub.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/api",
+			"type": "string"
+		},
+		{
+			"key": "adminToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "accountantToken",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Admin Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "Accountant Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"accountant\",\n  \"password\": \"acc123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Silos & Telemetry",
+			"item": [
+				{
+					"name": "Get All Silo Units",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/silos/units",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"silos",
+								"units"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Silo Unit (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"SILO-C1\",\n  \"name\": \"South Valley Oat Silo C1\",\n  \"capacityTons\": 4000.0,\n  \"cropType\": \"Oats\",\n  \"targetMoistureThreshold\": 14.0,\n  \"idealTempMin\": 10.0,\n  \"idealTempMax\": 24.0\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/silos/units",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"silos",
+								"units"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Climate Thresholds (Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/silos/units/1/thresholds?targetMoisture=14.2&idealTempMin=9.0&idealTempMax=23.5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"silos",
+								"units",
+								"1",
+								"thresholds"
+							],
+							"query": [
+								{
+									"key": "targetMoisture",
+									"value": "14.2"
+								},
+								{
+									"key": "idealTempMin",
+									"value": "9.0"
+								},
+								{
+									"key": "idealTempMax",
+									"value": "23.5"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Ingest Telemetry Reading",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"siloId\": 1,\n  \"moisturePercent\": 15.8,\n  \"temperatureCelsius\": 18.2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/silos/telemetry",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"silos",
+								"telemetry"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Silo Telemetry (Paged)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/silos/1/telemetry?page=0&size=20",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"silos",
+								"1",
+								"telemetry"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Toggle Telemetry Simulator",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/silos/telemetry/simulator/toggle?enabled=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"silos",
+								"telemetry",
+								"simulator",
+								"toggle"
+							],
+							"query": [
+								{
+									"key": "enabled",
+									"value": "true"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Aeration Fan Events",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/fan-events?siloId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"fan-events"
+							],
+							"query": [
+								{
+									"key": "siloId",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Manual Fan Override (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"siloId\": 1,\n  \"action\": \"ON\",\n  \"reason\": \"Manual preventative circulation before storm\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/fan-events/override",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"fan-events",
+								"override"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Master Data",
+			"item": [
+				{
+					"name": "Get Contacts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/contacts?type=CUSTOMER",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"contacts"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "CUSTOMER"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Contact",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"CUST-003\",\n  \"name\": \"Highland Agriculture Alliance\",\n  \"type\": \"CUSTOMER\",\n  \"email\": \"contact@highlandagri.org\",\n  \"phone\": \"+1-555-0499\",\n  \"address\": \"500 Valley Road, Lincoln, NE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/contacts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"contacts"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"GOODS-VENT-FAN\",\n  \"name\": \"High-Efficiency 15HP Aeration Fan\",\n  \"type\": \"GOODS\",\n  \"unitPrice\": 3200.00,\n  \"taxRate\": 7.50\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Transactions & Accounting",
+			"item": [
+				{
+					"name": "Create Purchase Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accountantToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendorId\": 3,\n  \"orderDate\": \"2026-09-27\",\n  \"items\": [\n    {\n      \"productId\": 4,\n      \"quantity\": 2\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/purchase-orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"purchase-orders"
+							]
+						}
+					}
+				},
+				{
+					"name": "Convert PO to Vendor Bill",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accountantToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/purchase-orders/1/convert-to-bill",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"purchase-orders",
+								"1",
+								"convert-to-bill"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Sales Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accountantToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerId\": 1,\n  \"orderDate\": \"2026-09-27\",\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 1000\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sales-orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sales-orders"
+							]
+						}
+					}
+				},
+				{
+					"name": "Convert SO to Customer Invoice",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accountantToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sales-orders/1/convert-to-invoice",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sales-orders",
+								"1",
+								"convert-to-invoice"
+							]
+						}
+					}
+				},
+				{
+					"name": "Record Outbound Payment (Bill)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accountantToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"paymentDate\": \"2026-09-27\",\n  \"amount\": 3700.00,\n  \"paymentType\": \"OUTBOUND\",\n  \"partnerId\": 3,\n  \"bankAccountId\": 13,\n  \"billId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/payments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payments"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Chart of Accounts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accountantToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/accounts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"accounts"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Journal Entries",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accountantToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/journal-entries?page=0&size=20",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"journal-entries"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Budgets & Reports",
+			"item": [
+				{
+					"name": "Get All Budgets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/budgets",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"budgets"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Budget Variance",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/budgets/1/variance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"budgets",
+								"1",
+								"variance"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Balance Sheet Report",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/reports/balance-sheet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reports",
+								"balance-sheet"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Profit & Loss Report",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/reports/profit-and-loss?from=2026-01-01&to=2026-12-31",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reports",
+								"profit-and-loss"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2026-01-01"
+								},
+								{
+									"key": "to",
+									"value": "2026-12-31"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}
